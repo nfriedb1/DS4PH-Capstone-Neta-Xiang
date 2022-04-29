@@ -7,5 +7,3 @@
 #### https://americanhealth.jhu.edu/news/transit-equity-environmental-health-baltimore
 
 ### More details:
-
-# Hi Xiang
