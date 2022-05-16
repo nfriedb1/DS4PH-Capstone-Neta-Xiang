@@ -22,13 +22,15 @@ import sklearn as skl
 import statsmodels.formula.api as smf
 import torch
 import time
+import plotly.express as px
+import plotly.graph_objects as go
 
 # Use censusgeocode for census tract info
 # https://pypi.org/project/censusgeocode/
 import censusgeocode as cg
 
 st.set_page_config(page_title='Bmore Health', page_icon="🏥", layout = 'wide')
-st.sidebar.header('HEALTH PREDICTIONS BY CENSUS TRACT IN BALTIMORE CITY')
+st.sidebar.header('Health Predictions By Census Tract in Baltimore City')
 column1, column2 = st.columns([1,1])
 
 #######################################################################
@@ -148,12 +150,22 @@ prediction = getPrediction(ct)
 
 percentile_pred = str(float(prediction) * 100)
 
+# fig1 for comparing census tract to rest of Maryland
+
+fig1 = go.Figure(go.Bar(
+            x=[20, 14],
+            y=['Maryland', 'Your Census Tract'],
+            orientation='h'))
+
 # if we have time make this prettier
 if health_select == 'Asthma':
     with column1:
         st.subheader("We predict "+ percentile_pred+ "% of adults in your census tract have asthma.", anchor = None)
         
-    with column2: 
+    with column1:
+        st.plotly_chart(fig1, use_container_width=True) # XX added fig1 to column 1
+        
+    with column2: # added to column 2
         st.title('What is Asthma?', anchor=None)
         st.markdown(""" Asthma is a chronic (long-term) condition that affects the airways in the lungs. With asthma, airways are swollen and inflamed,  making it difficult to carry air in and out of the lungs. The most common risk factors for developing asthma are family history, viral respiratory infections during childhood, allergies, smoking, and air pollution. Asthma symptoms vary from person to person. **Common signs and symptoms include:**
     
@@ -166,6 +178,7 @@ if health_select == 'Asthma':
 - Trouble sleeping due to shortness of breath, coughing or wheezing
     
 Asthma can worsen when certain triggers are present. Asthma attacks have been linked to triggers such as pollen, exercise, viral infections, cold weather, dust, smoke, and pet dander. Asthma cannot be cured but symptoms can be controlled by medications, avoiding triggers, and lifestyle changes. """)
+        
 elif health_select == 'Lung cancer':
     with column1:
         st.subheader("We predict "+ prediction+ " lung cancer cases in your census tract.", anchor = None) # figure out per X number of people if we have time
@@ -187,12 +200,13 @@ elif health_select == 'Lung cancer':
 - Swelling in face or veins in the neck  
 
 Treatment of lung cancer will depend on the type of lung cancer and how far it has spread. Common treatments include surgery, chemotherapy, immunotherapy and laser therapy. """)
+        
 elif health_select == 'Heart disease':
     with column1:
         st.subheader("We predict that your census tract is at the "+ percentile_pred+ "th percentile for number of patients released from a hospital after a heart attack.", anchor = None)
         
     with column2:
-        st.title('What is Lung Cancer?', anchor=None)
+        st.title('What is Heart Disease?', anchor=None)
         st.markdown(""" Heart disease is the leading cause of death in the U.S. The most common type of heart disease is coronary artery disease (CAD) which can lead to a heart attack. Risk factors for developing heart disease include diabetes, overweight and obesity, smoking, and environmental factors (air pollution, secondhand smoke).  **Symptoms of heart disease:**
 
 - Chest pain, chest tightness, chest pressure 
@@ -204,9 +218,20 @@ elif health_select == 'Heart disease':
 - Pain in neck, jaw, throat, upper abdomen or back  
 
 Treatment for heart disease includes lifestyle changes, medications, or medical procedure/surgery. """)
+        
 elif health_select == 'Low birth weight':
     with column1:
         st.subheader("We predict that your census tract is at the "+ percentile_pred+ "th percentile for number of babies born at a low birthweight, compared to the state of Maryland.", anchor = None)
+    
+    with column2:
+        st.title('What is Low Birth Weight?', anchor=None)
+        st.markdown("""Low birthweight (LBW) is when a baby is born below 5 pounds and 8 ounces. Risk factors for low birth weight include premature birth and intrauterine growth restriction (IUGR) in the baby due to environmental or genetic factors in the womb. Some women are at higher risk for having babies with IUGR.
+
+**Risk factors** in the mother include weight of mother < 100 pounds, use of drugs or alcohol, poor nutrition, racial and ethnic factors, and socioeconomic factors.  
+
+Common problems of LBW babies includes low oxygen levels at birth, sudden infant death syndrome, infection, respiratory problems, bleeding inside the brain, gastrointestinal problems.
+
+Low birthweight can be estimated in different ways during pregnancy. Specific management for LBW will be determined by your baby’s doctor based on factors such as baby’s gestational age and tolerance for specific medications. """)
 
 #######################################################################
 # GET MEANS OF ALL HEALTH OUTCOMES - FOR COMPARISON TO BMORE AVG (by Neta)
