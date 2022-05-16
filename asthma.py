@@ -86,7 +86,7 @@ with column1:
 location_df = pd.DataFrame(coord_tuple, index = ['lat', 'lon']).swapaxes("index", "columns")
 
 with column1:
-    st.map(location_df, 13)
+    st.map(location_df, 13) 
 
 #######################################################################
 # GET COORDINATES FROM MAP CLICK (optional????)
@@ -102,8 +102,6 @@ df = df.drop(["GEOID", "PTRAF"], axis = 1)
 df = df.drop_duplicates(subset=None, keep='first', ignore_index=False)
 df = df.drop(labels=[120, 403, 575], axis=0) #deleted rows with NA 
 
-with column2:
-    st.dataframe(df) #(temporary)
 
 # get Y value depending on health_select
 if health_select == 'Asthma':
@@ -154,12 +152,58 @@ percentile_pred = str(float(prediction) * 100)
 if health_select == 'Asthma':
     with column1:
         st.subheader("We predict "+ percentile_pred+ "% of adults in your census tract have asthma.", anchor = None)
+        
+    with column2: 
+        st.title('What is Asthma?', anchor=None)
+        st.markdown(""" Asthma is a chronic (long-term) condition that affects the airways in the lungs. With asthma, airways are swollen and inflamed,  making it difficult to carry air in and out of the lungs. The most common risk factors for developing asthma are family history, viral respiratory infections during childhood, allergies, smoking, and air pollution. Asthma symptoms vary from person to person. **Common signs and symptoms include:**
+    
+- Shortness of breath
+    
+- Chest tightness or pain
+    
+- Wheezing
+    
+- Trouble sleeping due to shortness of breath, coughing or wheezing
+    
+Asthma can worsen when certain triggers are present. Asthma attacks have been linked to triggers such as pollen, exercise, viral infections, cold weather, dust, smoke, and pet dander. Asthma cannot be cured but symptoms can be controlled by medications, avoiding triggers, and lifestyle changes. """)
 elif health_select == 'Lung cancer':
     with column1:
         st.subheader("We predict "+ prediction+ " lung cancer cases in your census tract.", anchor = None) # figure out per X number of people if we have time
+        
+    with column2:
+        st.title('What is Lung Cancer?', anchor=None)
+        st.markdown(""" Lung cancer is a cancer that forms in the tissues of the lung. Common risk factors for developing asthma include smoking, family history, radiation exposure, air pollution, and HIV infection.  **Some symptoms of lung cancer include:**
+
+- Chest pain or discomfort 
+
+- Cough that doesn’t go away or gets worse over time 
+
+- Trouble breathing 
+
+- Wheezing 
+
+- Trouble swallowing  
+
+- Swelling in face or veins in the neck  
+
+Treatment of lung cancer will depend on the type of lung cancer and how far it has spread. Common treatments include surgery, chemotherapy, immunotherapy and laser therapy. """)
 elif health_select == 'Heart disease':
     with column1:
         st.subheader("We predict that your census tract is at the "+ percentile_pred+ "th percentile for number of patients released from a hospital after a heart attack.", anchor = None)
+        
+    with column2:
+        st.title('What is Lung Cancer?', anchor=None)
+        st.markdown(""" Heart disease is the leading cause of death in the U.S. The most common type of heart disease is coronary artery disease (CAD) which can lead to a heart attack. Risk factors for developing heart disease include diabetes, overweight and obesity, smoking, and environmental factors (air pollution, secondhand smoke).  **Symptoms of heart disease:**
+
+- Chest pain, chest tightness, chest pressure 
+
+- Shortness of breath  
+
+- Pain, numbness, weakness or coldness in legs or arms  
+
+- Pain in neck, jaw, throat, upper abdomen or back  
+
+Treatment for heart disease includes lifestyle changes, medications, or medical procedure/surgery. """)
 elif health_select == 'Low birth weight':
     with column1:
         st.subheader("We predict that your census tract is at the "+ percentile_pred+ "th percentile for number of babies born at a low birthweight, compared to the state of Maryland.", anchor = None)
