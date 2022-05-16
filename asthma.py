@@ -24,15 +24,18 @@ import torch
 import time
 import plotly.express as px
 import plotly.graph_objects as go
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
 
 # Use censusgeocode for census tract info
 # https://pypi.org/project/censusgeocode/
 import censusgeocode as cg
 
 st.set_page_config(page_title='Bmore Health', page_icon="🏥", layout = 'wide')
-st.sidebar.header('Health Predictions By Census Tract in Baltimore City')
+st.sidebar.header('Health Predictions By Census Tract in Baltimore City, Maryland')
 column1, column2 = st.columns([1,1])
-
+    
 #######################################################################
 # GET CENSUS TRACT DATA FROM ADDRESS (by Neta)
 #######################################################################
@@ -150,22 +153,25 @@ prediction = getPrediction(ct)
 
 percentile_pred = str(float(prediction) * 100)
 
-# fig1 for comparing census tract to rest of Maryland
+### fig1 for comparing census tract to rest of Maryland ####
 
 fig1 = go.Figure(go.Bar(
             x=[20, 14],
             y=['Maryland', 'Your Census Tract'],
             orientation='h'))
 
+### IMAGES FOR INDICATOR STATISTICS ##
+
+
 # if we have time make this prettier
-if health_select == 'Asthma':
+if health_select == 'Asthma': 
     with column1:
         st.subheader("We predict "+ percentile_pred+ "% of adults in your census tract have asthma.", anchor = None)
         
     with column1:
-        st.plotly_chart(fig1, use_container_width=True) # XX added fig1 to column 1
+        st.plotly_chart(fig1, use_container_width=True) # added fig1 to column 1
         
-    with column2: # added to column 2
+    with column2: # added description
         st.title('What is Asthma?', anchor=None)
         st.markdown(""" Asthma is a chronic (long-term) condition that affects the airways in the lungs. With asthma, airways are swollen and inflamed,  making it difficult to carry air in and out of the lungs. The most common risk factors for developing asthma are family history, viral respiratory infections during childhood, allergies, smoking, and air pollution. Asthma symptoms vary from person to person. **Common signs and symptoms include:**
     
@@ -178,12 +184,31 @@ if health_select == 'Asthma':
 - Trouble sleeping due to shortness of breath, coughing or wheezing
     
 Asthma can worsen when certain triggers are present. Asthma attacks have been linked to triggers such as pollen, exercise, viral infections, cold weather, dust, smoke, and pet dander. Asthma cannot be cured but symptoms can be controlled by medications, avoiding triggers, and lifestyle changes. """)
+    with column2: ## a
+        expander_asthma = st.expander("See References and Resources")
+        expander_asthma.write(""" 
+https://www.nhlbi.nih.gov/health/asthma
+
+https://www.lung.org/lung-health-diseases/lung-disease-lookup/asthma/learn-about-asthma/what-is-asthma  
+
+https://www.mayoclinic.org/diseases-conditions/asthma/symptoms-causes/syc-20369653  
+
+https://www.mayoclinic.org/diseases-conditions/asthma/diagnosis-treatment/drc-20369660  
+
+https://www.lung.org/lung-health-diseases/lung-disease-lookup/asthma/asthma-symptoms-causes-risk-factors/asthma-risk-factors  
+
+https://www.nhlbi.nih.gov/sites/default/files/publications/AsthmaInfographic-2020.pdf  
+
+""")
         
 elif health_select == 'Lung cancer':
     with column1:
         st.subheader("We predict "+ prediction+ " lung cancer cases in your census tract.", anchor = None) # figure out per X number of people if we have time
+
+    with column1:
+        st.plotly_chart(fig1, use_container_width=True) # added fig1 to column 1
         
-    with column2:
+    with column2: # added description
         st.title('What is Lung Cancer?', anchor=None)
         st.markdown(""" Lung cancer is a cancer that forms in the tissues of the lung. Common risk factors for developing asthma include smoking, family history, radiation exposure, air pollution, and HIV infection.  **Some symptoms of lung cancer include:**
 
@@ -201,11 +226,26 @@ elif health_select == 'Lung cancer':
 
 Treatment of lung cancer will depend on the type of lung cancer and how far it has spread. Common treatments include surgery, chemotherapy, immunotherapy and laser therapy. """)
         
+    with column2: #references expander
+        expander_lung = st.expander("See References and Resources")
+        expander_lung.write(""" 
+https://medlineplus.gov/lungcancer.html  
+
+https://www.cdc.gov/cancer/lung/statistics/index.htm
+
+https://www.lung.org/lung-health-diseases/lung-disease-lookup/lung-cancer/resource-library/lung-cancer-fact-sheet
+
+""")
+
+        
 elif health_select == 'Heart disease':
     with column1:
         st.subheader("We predict that your census tract is at the "+ percentile_pred+ "th percentile for number of patients released from a hospital after a heart attack.", anchor = None)
+    
+    with column1:
+        st.plotly_chart(fig1, use_container_width=True) # XX added fig1 to column 1
         
-    with column2:
+    with column2: # added description
         st.title('What is Heart Disease?', anchor=None)
         st.markdown(""" Heart disease is the leading cause of death in the U.S. The most common type of heart disease is coronary artery disease (CAD) which can lead to a heart attack. Risk factors for developing heart disease include diabetes, overweight and obesity, smoking, and environmental factors (air pollution, secondhand smoke).  **Symptoms of heart disease:**
 
@@ -218,20 +258,40 @@ elif health_select == 'Heart disease':
 - Pain in neck, jaw, throat, upper abdomen or back  
 
 Treatment for heart disease includes lifestyle changes, medications, or medical procedure/surgery. """)
+
+    with column2:#references expander
+        expander_heart = st.expander("See References and Resources")
+        expander_heart.write(""" 
+https://www.cdc.gov/heartdisease/index.htm  
+
+https://www.mayoclinic.org/diseases-conditions/heart-disease/symptoms-causes/syc-20353118  
+
+https://www.mayoclinic.org/diseases-conditions/heart-disease/diagnosis-treatment/drc-20353124
+""")
         
 elif health_select == 'Low birth weight':
     with column1:
         st.subheader("We predict that your census tract is at the "+ percentile_pred+ "th percentile for number of babies born at a low birthweight, compared to the state of Maryland.", anchor = None)
+        
+    with column1:
+        st.plotly_chart(fig1, use_container_width=True) # added fig1 to column 1
     
-    with column2:
+    with column2: # added description
         st.title('What is Low Birth Weight?', anchor=None)
-        st.markdown("""Low birthweight (LBW) is when a baby is born below 5 pounds and 8 ounces. Risk factors for low birth weight include premature birth and intrauterine growth restriction (IUGR) in the baby due to environmental or genetic factors in the womb. Some women are at higher risk for having babies with IUGR.
+        st.markdown(""" Low birthweight (LBW) is when a baby is born below 5 pounds and 8 ounces. Risk factors for low birth weight include premature birth and intrauterine growth restriction (IUGR) in the baby due to environmental or genetic factors in the womb. Some women are at higher risk for having babies with IUGR.
 
 **Risk factors** in the mother include weight of mother < 100 pounds, use of drugs or alcohol, poor nutrition, racial and ethnic factors, and socioeconomic factors.  
 
 Common problems of LBW babies includes low oxygen levels at birth, sudden infant death syndrome, infection, respiratory problems, bleeding inside the brain, gastrointestinal problems.
 
-Low birthweight can be estimated in different ways during pregnancy. Specific management for LBW will be determined by your baby’s doctor based on factors such as baby’s gestational age and tolerance for specific medications. """)
+Low birthweight can be estimated in different ways during pregnancy. Specific management for LBW will be determined by your baby’s doctor based on factors such as baby’s gestational age and tolerance for specific medications. 
+""")
+        
+    with column2: #references expander
+        expander_LBW = st.expander("See References and Resources")
+        expander_LBW.write(""" 
+https://www.chop.edu/conditions-diseases/low-birthweight  
+""")
 
 #######################################################################
 # GET MEANS OF ALL HEALTH OUTCOMES - FOR COMPARISON TO BMORE AVG (by Neta)
@@ -241,3 +301,4 @@ lungmean = df['lungCAvalue'].mean()
 asthmamean = df['asthmavalue'].mean() * 100
 CADmean = df['CADvalue'].mean() * 100
 LBWmean = df['LBWvalue'].mean() * 100
+
