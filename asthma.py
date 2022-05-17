@@ -20,8 +20,6 @@ from sklearn.linear_model import LinearRegression
 import seaborn as sns
 import sklearn as skl
 import statsmodels.formula.api as smf
-import torch
-import time
 import plotly.express as px
 import plotly.graph_objects as go
 from PIL import Image
