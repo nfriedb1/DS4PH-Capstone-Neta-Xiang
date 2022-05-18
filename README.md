@@ -1,7 +1,11 @@
 # Health Outcome Predictions by Census Tract
 ### Xiang Xiang Fang and Neta Friedberg
 
-Our app asks for a Baltimore City address and gives a prediction about each of the following health outcomes at the census tract level: asthma, heart disease, lung cancer, and low birh weight.
+#### Find the app online here (desktop only): https://share.streamlit.io/nfriedb1/ds4ph-capstone-neta-xiang/main/asthma.py
+
+### Background
+
+Our app asks for a Baltimore City address and gives a prediction about each of the following health outcomes at the census tract level: asthma, heart disease, lung cancer, and low birh weight. It is an informational app intended for use by Baltimore residents that are interested in their health.
 Our project is based on the Baltimore Transit Equity Coalition (BTEC) & JHU report, which found areas in Baltimore city that are in greatest need of transit improvements, based on four indicator groups: transit, health, social vulnerability, and air pollution.
 The full report can be found here:
 https://americanhealth.jhu.edu/news/transit-equity-environmental-health-baltimore
@@ -24,5 +28,5 @@ Neta's video can be found here:
 
 ### System & Library requirements
 
-Find in requirements.txt file. App runs on Python 3.7.
+Find app dependencies in Pipfile. App runs on Python 3.7. Other supplementary files may require other dependencies, but does not alter the functionality of the app.
 

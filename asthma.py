@@ -78,24 +78,6 @@ ct = getcensus(coord_tuple[0], coord_tuple[1])
 #st.write("The census tract is: ", ct)
 
 #######################################################################
-# SHOW MAP WITH ADDRESS (by Neta)
-#######################################################################
-
-# label as location
-with column1:
-    st.subheader("Your Location:", anchor = None)
-
-# make dataframe for map easy peasy
-location_df = pd.DataFrame(coord_tuple, index = ['lat', 'lon']).swapaxes("index", "columns")
-
-with column1:
-    st.map(location_df, 13) 
-
-#######################################################################
-# GET COORDINATES FROM MAP CLICK (optional????)
-#######################################################################
-
-#######################################################################
 # DATA SETUP (by Xiang Xiang)
 #######################################################################
 
@@ -151,25 +133,58 @@ prediction = getPrediction(ct)
 
 percentile_pred = str(float(prediction) * 100)
 
-### fig1 for comparing census tract to rest of Maryland ####
+#######################################################################
+# GET MEANS OF ALL HEALTH OUTCOMES - FOR COMPARISON TO BMORE AVG (by Neta)
+#######################################################################
 
-fig1 = go.Figure(go.Bar(
-            x=[20, 14],
-            y=['Maryland', 'Your Census Tract'],
-            orientation='h'))
+lungmean = df['lungCAvalue'].mean()
+asthmamean = df['asthmavalue'].mean() * 100
+CADmean = df['CADvalue'].mean() * 100
+LBWmean = df['LBWvalue'].mean() * 100
 
-### IMAGES FOR INDICATOR STATISTICS ##
 
+### IMAGES FOR INDICATOR STATISTICS ## (if time??)
+
+#######################################################################
+# HEALTH PREDICTION INTERPRETATION (by Neta)
+#######################################################################
+
+# build a function to aid in the interpretation of health data 
+# will print that either more or fewer people in that census tract have
+# the health effect compared to the Bmore average
+
+def comparison(mean, pred):
+    if float(mean) > float(pred):
+        return("fewer")
+    elif float(mean) < float(pred):
+        return("more")
+    elif float(mean) == float(pred):
+        return("the same amount of")
+
+#######################################################################
+# HEALTH INFO (by Xiang) & PRINT PREDICTIONS AND MEANS (by Neta)
+#######################################################################
 
 # if we have time make this prettier
 if health_select == 'Asthma': 
     with column1:
         st.subheader("We predict "+ percentile_pred+ "% of adults in your census tract have asthma.", anchor = None)
+        st.subheader("The average in Baltimore City is " + str(round(asthmamean, 2)) + "%.", anchor = None)
+        # add comparison
+        compare = comparison(asthmamean, percentile_pred)
+        st.subheader("This means that there are " + compare + " adult asthma cases near you than the Baltimore average.", anchor = None)
+    ### fig1 for comparing census tract to rest of Maryland  ####
         
-    with column1:
+    fig1 = go.Figure(go.Bar(
+                x=[asthmamean, percentile_pred],
+                y=['Baltimore Average', 'Your Census Tract'],
+                orientation='h'))
+    fig1.update_layout(height = 200, margin=dict(r=0, l=0, t=0, b=0), font_size = 16, hoverlabel_font_size=14)
+    with column2:
+        st.markdown("<h4 style='text-align: center; font-style: italic;'>Comparison of Percentage of Adults with Asthma</h4>", unsafe_allow_html=True)
         st.plotly_chart(fig1, use_container_width=True) # added fig1 to column 1
-        
-    with column2: # added description
+
+    with column1: # added description
         st.title('What is Asthma?', anchor=None)
         st.markdown(""" Asthma is a chronic (long-term) condition that affects the airways in the lungs. With asthma, airways are swollen and inflamed,  making it difficult to carry air in and out of the lungs. The most common risk factors for developing asthma are family history, viral respiratory infections during childhood, allergies, smoking, and air pollution. Asthma symptoms vary from person to person. **Common signs and symptoms include:**
     
@@ -182,7 +197,7 @@ if health_select == 'Asthma':
 - Trouble sleeping due to shortness of breath, coughing or wheezing
     
 Asthma can worsen when certain triggers are present. Asthma attacks have been linked to triggers such as pollen, exercise, viral infections, cold weather, dust, smoke, and pet dander. Asthma cannot be cured but symptoms can be controlled by medications, avoiding triggers, and lifestyle changes. """)
-    with column2: ## a
+    with column1: ## a
         expander_asthma = st.expander("See References and Resources")
         expander_asthma.write(""" 
 https://www.nhlbi.nih.gov/health/asthma
@@ -202,11 +217,23 @@ https://www.nhlbi.nih.gov/sites/default/files/publications/AsthmaInfographic-202
 elif health_select == 'Lung cancer':
     with column1:
         st.subheader("We predict "+ prediction+ " lung cancer cases in your census tract.", anchor = None) # figure out per X number of people if we have time
+        st.subheader("The average in Baltimore City is " + str(round(lungmean, 2)) + " cases per census tract.", anchor = None)
+        # add comparison
+        compare = comparison(lungmean, prediction)
+        st.subheader("This means that there are " + compare + " lung cancer cases near you than the Baltimore average.", anchor = None)
+    ### fig1 for comparing census tract to rest of Maryland  ####
 
-    with column1:
+    fig1 = go.Figure(go.Bar(
+                x=[lungmean, prediction],
+                y=['Baltimore Average', 'Your Census Tract'],
+                orientation='h'))
+    fig1.update_layout(height = 200, margin=dict(r=0, l=0, t=0, b=0), font_size = 16, hoverlabel_font_size=14)
+
+    with column2:
+        st.markdown("<h4 style='text-align: center; font-style: italic;'>Comparison of Lung Cancer Cases</h4>", unsafe_allow_html=True)
         st.plotly_chart(fig1, use_container_width=True) # added fig1 to column 1
         
-    with column2: # added description
+    with column1: # added description
         st.title('What is Lung Cancer?', anchor=None)
         st.markdown(""" Lung cancer is a cancer that forms in the tissues of the lung. Common risk factors for developing asthma include smoking, family history, radiation exposure, air pollution, and HIV infection.  **Some symptoms of lung cancer include:**
 
@@ -224,7 +251,7 @@ elif health_select == 'Lung cancer':
 
 Treatment of lung cancer will depend on the type of lung cancer and how far it has spread. Common treatments include surgery, chemotherapy, immunotherapy and laser therapy. """)
         
-    with column2: #references expander
+    with column1: #references expander
         expander_lung = st.expander("See References and Resources")
         expander_lung.write(""" 
 https://medlineplus.gov/lungcancer.html  
@@ -239,11 +266,23 @@ https://www.lung.org/lung-health-diseases/lung-disease-lookup/lung-cancer/resour
 elif health_select == 'Heart disease':
     with column1:
         st.subheader("We predict that your census tract is at the "+ percentile_pred+ "th percentile for number of patients released from a hospital after a heart attack.", anchor = None)
-    
-    with column1:
+        st.subheader("The average in Baltimore City is the " + str(round(CADmean, 2)) + "th percentile.", anchor = None)
+        # add comparison
+        compare = comparison(CADmean, percentile_pred)
+        st.subheader("This means that there are " + compare + " heart disease cases near you than the Baltimore average.", anchor = None)
+    ### fig1 for comparing census tract to rest of Maryland  ####
+
+    fig1 = go.Figure(go.Bar(
+                x=[CADmean, percentile_pred],
+                y=['Baltimore Average', 'Your Census Tract'],
+                orientation='h'))
+    fig1.update_layout(height = 200, margin=dict(r=0, l=0, t=0, b=0), font_size = 16, hoverlabel_font_size=14)
+
+    with column2:
+        st.markdown("<h4 style='text-align: center; font-style: italic;'>Comparison of Heart Disease Percentile</h4>", unsafe_allow_html=True)
         st.plotly_chart(fig1, use_container_width=True) # XX added fig1 to column 1
         
-    with column2: # added description
+    with column1: # added description
         st.title('What is Heart Disease?', anchor=None)
         st.markdown(""" Heart disease is the leading cause of death in the U.S. The most common type of heart disease is coronary artery disease (CAD) which can lead to a heart attack. Risk factors for developing heart disease include diabetes, overweight and obesity, smoking, and environmental factors (air pollution, secondhand smoke).  **Symptoms of heart disease:**
 
@@ -257,7 +296,7 @@ elif health_select == 'Heart disease':
 
 Treatment for heart disease includes lifestyle changes, medications, or medical procedure/surgery. """)
 
-    with column2:#references expander
+    with column1:#references expander
         expander_heart = st.expander("See References and Resources")
         expander_heart.write(""" 
 https://www.cdc.gov/heartdisease/index.htm  
@@ -270,11 +309,24 @@ https://www.mayoclinic.org/diseases-conditions/heart-disease/diagnosis-treatment
 elif health_select == 'Low birth weight':
     with column1:
         st.subheader("We predict that your census tract is at the "+ percentile_pred+ "th percentile for number of babies born at a low birthweight, compared to the state of Maryland.", anchor = None)
+        st.subheader("The average in Baltimore City is the " + str(round(LBWmean, 2)) + "th percentile.", anchor = None)
+        # add comparison
+        compare = comparison(LBWmean, percentile_pred)
+        st.subheader("This means that there are " + compare + " babies born at a low birth weight near you than the Baltimore average.", anchor = None)
+    ### fig1 for comparing census tract to rest of Maryland  ####
+
+    fig1 = go.Figure(go.Bar(
+                x=[LBWmean, percentile_pred],
+                y=['Baltimore Average', 'Your Census Tract'],
+                orientation='h'))
+    fig1.update_layout(height = 200, margin=dict(r=0, l=0, t=0, b=0), font_size = 16, hoverlabel_font_size=14)
+
         
-    with column1:
+    with column2:
+        st.markdown("<h4 style='text-align: center; font-style: italic;'>Comparison of Low Birth Weight Percentile</h4>", unsafe_allow_html=True)
         st.plotly_chart(fig1, use_container_width=True) # added fig1 to column 1
     
-    with column2: # added description
+    with column1: # added description
         st.title('What is Low Birth Weight?', anchor=None)
         st.markdown(""" Low birthweight (LBW) is when a baby is born below 5 pounds and 8 ounces. Risk factors for low birth weight include premature birth and intrauterine growth restriction (IUGR) in the baby due to environmental or genetic factors in the womb. Some women are at higher risk for having babies with IUGR.
 
@@ -285,18 +337,24 @@ Common problems of LBW babies includes low oxygen levels at birth, sudden infant
 Low birthweight can be estimated in different ways during pregnancy. Specific management for LBW will be determined by your baby’s doctor based on factors such as baby’s gestational age and tolerance for specific medications. 
 """)
         
-    with column2: #references expander
+    with column1: #references expander
         expander_LBW = st.expander("See References and Resources")
         expander_LBW.write(""" 
 https://www.chop.edu/conditions-diseases/low-birthweight  
 """)
 
 #######################################################################
-# GET MEANS OF ALL HEALTH OUTCOMES - FOR COMPARISON TO BMORE AVG (by Neta)
+# SHOW MAP WITH ADDRESS (by Neta)
 #######################################################################
 
-lungmean = df['lungCAvalue'].mean()
-asthmamean = df['asthmavalue'].mean() * 100
-CADmean = df['CADvalue'].mean() * 100
-LBWmean = df['LBWvalue'].mean() * 100
+# label as location
+with column2:
+    st.subheader("Your Location:", anchor = None)
+
+# make dataframe for map easy peasy
+location_df = pd.DataFrame(coord_tuple, index = ['lat', 'lon']).swapaxes("index", "columns")
+
+with column2:
+    st.map(location_df, 13) 
+
 
