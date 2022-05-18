@@ -24,7 +24,7 @@ Xiang Xiang set up the data, built the prediction models, and assembled health i
 Xiang Xiang's video can be found here:
 
 Neta built the majority of the Streamlit app, hosted it online, and ensured functionality of the sidebar, map, and outputs. 
-Neta's video can be found here:
+Neta's video can be found here: https://youtu.be/eAiqN6DPzkI (Unfortunately it is bad quality and for some reason clipped the left edge of the screen. Luckily you can access the app and try it yourself!)
 
 ### System & Library requirements
 
