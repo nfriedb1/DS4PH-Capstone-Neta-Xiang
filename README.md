@@ -16,40 +16,13 @@ All of our models can be found in DataSetUp.ipynb.
 
 ### Individual Contributions
 
-Xiang Xiang set up the data and build the prediction models, and assembled health information about each of the outcomes.
+Xiang Xiang set up the data, built the prediction models, and assembled health information about each of the outcomes.
 Xiang Xiang's video can be found here:
 
 Neta built the majority of the Streamlit app, hosted it online, and ensured functionality of the sidebar, map, and outputs. 
 Neta's video can be found here:
 
-### System requirements
+### System & Library requirements
 
-Python 3.7
-
-### Library requirements
-
-streamlit, pandas, numpy, matplotlib
-
-import streamlit as st
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
-from scipy import stats as stats
-sns.set()
-from sklearn.metrics import accuracy_score, roc_curve, auc
-import sklearn
-from sklearn import linear_model
-import sklearn.linear_model as lm
-from sklearn.linear_model import LinearRegression
-import seaborn as sns
-import sklearn as skl
-import statsmodels.formula.api as smf
-import torch
-import time
-import plotly.express as px
-import plotly.graph_objects as go
-from PIL import Image
-from PIL import ImageDraw
-from PIL import ImageFont
+Find in requirements.txt file. App runs on Python 3.7.
 
