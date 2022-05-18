@@ -71,9 +71,21 @@ def getcensus(lat, long):
     return ct
 
 # get census tract from address
-coord_tuple = getcoord(street, city, state, zipcode) # these are the CORRECT orientation, unlike what the airheads at the census want
-ct = getcensus(coord_tuple[0], coord_tuple[1])
+# using 'try' for whenever an invalid address is added to try to remove the tracebacks from the app
+# because it looks unprofessional
+# just add lots of space so the traceback is 'hidden' because there is no good way to remove it apparently
+# but for now just add a separator
 
+try:
+    coord_tuple = getcoord(street, city, state, zipcode) # these are the CORRECT orientation, unlike what the airheads at the census want
+except IndexError:
+    st.subheader('Please enter a valid address!')
+    st.write('---------------------------------------------------')
+    st.markdown('#')
+try:
+    ct = getcensus(coord_tuple[0], coord_tuple[1])
+except NameError:
+    pass
 # show census tract (temporary)
 #st.write("The census tract is: ", ct)
 
@@ -89,6 +101,7 @@ df = df.drop(labels=[120, 403, 575], axis=0) #deleted rows with NA
 
 
 # get Y value depending on health_select
+
 if health_select == 'Asthma':
     y = df['asthmavalue']
 elif health_select == 'Lung cancer':
@@ -97,6 +110,7 @@ elif health_select == 'Heart disease':
     y = df['CADvalue']
 elif health_select == 'Low birth weight':
     y = df['LBWvalue']
+
 
 # set up X values
 x = df[["svi_ptile", "transit_ptile"]]
@@ -129,9 +143,10 @@ def getPrediction(ct):
         prediction = str(prediction)
         return(prediction)
 
-prediction = getPrediction(ct)
 
+prediction = getPrediction(ct)
 percentile_pred = str(float(prediction) * 100)
+
 
 #######################################################################
 # GET MEANS OF ALL HEALTH OUTCOMES - FOR COMPARISON TO BMORE AVG (by Neta)
@@ -177,7 +192,7 @@ if health_select == 'Asthma':
         
     fig1 = go.Figure(go.Bar(
                 x=[asthmamean, percentile_pred],
-                y=['Baltimore Average', 'Your Census Tract'],
+                y=['Baltimore Average ', 'Your Census Tract '],
                 orientation='h'))
     fig1.update_layout(height = 200, margin=dict(r=0, l=0, t=0, b=0), font_size = 16, hoverlabel_font_size=14)
     with column2:
@@ -225,7 +240,7 @@ elif health_select == 'Lung cancer':
 
     fig1 = go.Figure(go.Bar(
                 x=[lungmean, prediction],
-                y=['Baltimore Average', 'Your Census Tract'],
+                y=['Baltimore Average ', 'Your Census Tract '],
                 orientation='h'))
     fig1.update_layout(height = 200, margin=dict(r=0, l=0, t=0, b=0), font_size = 16, hoverlabel_font_size=14)
 
@@ -274,7 +289,7 @@ elif health_select == 'Heart disease':
 
     fig1 = go.Figure(go.Bar(
                 x=[CADmean, percentile_pred],
-                y=['Baltimore Average', 'Your Census Tract'],
+                y=['Baltimore Average ', 'Your Census Tract '],
                 orientation='h'))
     fig1.update_layout(height = 200, margin=dict(r=0, l=0, t=0, b=0), font_size = 16, hoverlabel_font_size=14)
 
@@ -317,7 +332,7 @@ elif health_select == 'Low birth weight':
 
     fig1 = go.Figure(go.Bar(
                 x=[LBWmean, percentile_pred],
-                y=['Baltimore Average', 'Your Census Tract'],
+                y=['Baltimore Average ', 'Your Census Tract '],
                 orientation='h'))
     fig1.update_layout(height = 200, margin=dict(r=0, l=0, t=0, b=0), font_size = 16, hoverlabel_font_size=14)
 
