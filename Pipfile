@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-streamlit = "0.74.0"
+streamlit = "*"
 matplotlib = "*"
 seaborn = "*"
 sklearn = "*"
