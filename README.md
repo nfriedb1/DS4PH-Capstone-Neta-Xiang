@@ -21,7 +21,7 @@ All of our models can be found in DataSetUp.ipynb.
 ### Individual Contributions
 
 Xiang Xiang set up the data, built the prediction models, and assembled health information about each of the outcomes.
-Xiang Xiang's video can be found here:
+Xiang Xiang's video can be found here: https://youtu.be/Rqixjw5a5hw
 
 Neta built the majority of the Streamlit app, hosted it online, and ensured functionality of the sidebar, map, and outputs. 
 Neta's video can be found here: https://youtu.be/eAiqN6DPzkI (Unfortunately it is bad quality and for some reason clipped the left edge of the screen. Luckily you can access the app and try it yourself!)
