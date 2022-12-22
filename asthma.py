@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats as stats
 sns.set()
-from scikit-learn.metrics import accuracy_score, roc_curve, auc
+from sklearn.metrics import accuracy_score, roc_curve, auc
 import sklearn
 from sklearn import linear_model
 import sklearn.linear_model as lm
